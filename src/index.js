@@ -1,17 +1,48 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink } from '@apollo/client';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { LoginPage } from "./login";
+import { ProtectedRoute } from "./protectedroute";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
+
+
+const client = new ApolloClient({
+  link: new HttpLink({
+  uri: 'http://localhost:5002'
+  }),
+  cache: new InMemoryCache()
+});
+
+
+
+
+
+
+
+function AppController() {
+  return (
+    <div className="AppController">
+      <Switch>
+        <Route exact path="/" component={LoginPage} />
+        <ProtectedRoute exact path="/app" component={App} />
+        <Route path="*" component={() => "404 NOT FOUND"} />
+      </Switch>
+    </div>
+  );
+}
+
+const rootElement = document.getElementById("root");
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+  <ApolloProvider client={client}>
+  <BrowserRouter>
+    <AppController />
+  </BrowserRouter>
+  </ApolloProvider>,
+  rootElement
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+
+
