@@ -1,23 +1,32 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import Admin from './Admin';
 import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink } from '@apollo/client';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import './style.css'
 import { LoginPage } from "./login";
 import { ProtectedRoute } from "./protectedroute";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import {AdminContainer} from './AdminContainer'
+import { setContext } from '@apollo/client/link/context';
 
+const httpLink =  new HttpLink({uri: 'http://localhost:5002' }) 
 
-
-const client = new ApolloClient({
-  link: new HttpLink({
-  uri: 'http://localhost:5002'
-  }),
-  cache: new InMemoryCache()
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const token = localStorage.getItem('token');
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      "x-token": token ? `${token}` : "",
+    }
+  }
 });
 
-
-
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache()
+});
 
 
 
@@ -27,7 +36,8 @@ function AppController() {
     <div className="AppController">
       <Switch>
         <Route exact path="/" component={LoginPage} />
-        <ProtectedRoute exact path="/app" component={App} />
+        <AdminContainer exact path="/admin" component={Admin}/> 
+     // <ProtectedRoute exact path="/admin" component={Admin} />
         <Route path="*" component={() => "404 NOT FOUND"} />
       </Switch>
     </div>

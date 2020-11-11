@@ -1,7 +1,7 @@
 class RoleManager {
   constructor(){
     this.routes = {
-      ADMIN: "/app",
+      ADMIN: "/admin",
       COMMUTER: "/transport",
       OPERATOR: "/operator"
     }
