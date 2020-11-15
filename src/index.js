@@ -1,15 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Admin from './Admin';
-import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink } from '@apollo/client';
+import Operator from './Operator';
+import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink, createHttpLink } from '@apollo/client';
 import './style.css'
 import { LoginPage } from "./login";
 import { ProtectedRoute } from "./protectedroute";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import {AdminContainer} from './AdminContainer'
 import { setContext } from '@apollo/client/link/context';
-
-const httpLink =  new HttpLink({uri: 'http://localhost:5002' }) 
+import {OperatorContainer} from './OperatorContainer'
+const httpLink = createHttpLink({uri: 'http://192.168.2.212:5002', credentials: 'include'}) 
 
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
@@ -37,6 +38,7 @@ function AppController() {
       <Switch>
         <Route exact path="/" component={LoginPage} />
         <AdminContainer exact path="/admin" component={Admin}/> 
+       <OperatorContainer exact path="/operator" component={Operator}/>
      // <ProtectedRoute exact path="/admin" component={Admin} />
         <Route path="*" component={() => "404 NOT FOUND"} />
       </Switch>

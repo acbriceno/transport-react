@@ -1,29 +1,38 @@
 import React, {useRef, useState} from "react";
 import auth from "./auth";
 import roleManager from './RoleManager'
+import Toast from 'react-bootstrap/Toast'
 
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import {gql, useMutation} from '@apollo/client'
+
 const  createStopM = gql `
-    mutation CreateStop($lat: String!, $lon: String!, $name: String!, $location: String!, $type: StopType!){
-      createStop(lat: $lat, lon: $lon, name: $name, location: $location, type: $type){
+    mutation createStop($stop: StopInput!){
+      createStop(stop: $stop){
         status
         code
         ... on StopResponse{
-          id
-          name
-          lat 
-          lon
-          type
-          location
+          stop {
+            id
+            name
+            location
+          }
         }
 
       }
     }
   `
 
- const initialState = {
+ var initialState = {
+   lat: '',
+   lon: '',
+   name: '',
+   location: '',
+   type: ''
+ }
+
+ const resetState = {
    lat: '',
    lon: '',
    name: '',
@@ -32,27 +41,34 @@ const  createStopM = gql `
  }
 
 
+
 export const CreateStopPage = props => {
 // if(auth.getRole() != null){
   // props.history.push(roleManager.getStartingRoute(auth.getRole())) 
 // }
   const [state, setState] = useState(initialState)
-  const [error, setError] = useState('')
+  const [errors, setErrors] = useState('')
+   const [show, setShow] = useState(false)
 
 
-  const [createStop, { loading, gqlError, data }] = useMutation(createStopM, {
+  const [createStop, { loading, error, data }] = useMutation(createStopM, {
     onCompleted: (data) =>{
       if(data !== undefined ){
        console.log(data)
         if(data.createStop === null){
         }else{
-        
+            if(!data.createStop.status){
+            return (<p> Stop not created </p>)
+          }
+          initialState = resetState
+          setState(initialState)
+          setShow(true)
         }
 
       }
 
     },
-    onError: (gqlError) => console.error("Error", gqlError)
+    onError: (error) => console.error("Error", error)
   })
 
   if(loading){return (<p> Loading... </p>)}
@@ -60,7 +76,7 @@ export const CreateStopPage = props => {
   async function handleCreateStop() {
     //event.preventDefault();
       console.log(state)  
-    //createStop({ variables: { lat: state.lat, lon: state.lon, name: state.name, location: state.location, type: state.type } });
+    createStop({ variables: {stop: { lat: parseFloat(state.lat), lon: parseFloat(state.lon), name: state.name, location: state.location, type: state.type }} });
   }
 
   const handleSubmit = e => {
@@ -68,17 +84,24 @@ export const CreateStopPage = props => {
 
     for(let key in state){
       if(state[key] === ''){
-        setError(`You must provide the input ${key}`)
-        console.log(error)
+        setErrors(`You must provide the input ${key}`)
+        console.log(errors)
         return
       }
     
     }
 
     if(state.type === 'Select' || state.type === ''){return}
-    setError('')
+    setErrors('')
 
     handleCreateStop()
+  }
+
+
+  const testSubmit = e =>{
+    e.preventDefault()
+   createStop({ variables: {stop: { lat: 20.359687, lon: "18.165895", name: "Placencia Bus Terminal", location: "Stann Creek", type: "TERMINAL" }} });
+  
   }
 
   const handleInput = e => {
@@ -89,8 +112,9 @@ export const CreateStopPage = props => {
  
   return (
     <>
+    <div className="row">
     <div className="col-md-4 col-md-offset-4">
-    { error && ( <p>{error}</p>)
+    { errors && ( <p>{errors}</p>)
     }
       <form noValidate>
 
@@ -115,6 +139,27 @@ export const CreateStopPage = props => {
     </Form.Group>
         <Button size="sm" onClick={e => handleSubmit(e)}>Create Stop</Button>
       </form>
+
+</div>
+
+   <div className="col-md-4">
+     <Toast onClose={() => setShow(false)} show={show} delay={2300} autohide>
+          <Toast.Header>
+            <img
+              src="holder.js/20x20?text=%20"
+              className="rounded mr-2"
+              alt=""
+            />
+            <strong className="mr-auto">Transport Management</strong>
+            <small>Just now</small>
+          </Toast.Header>
+          <Toast.Body>Operator Account Created</Toast.Body>
+        </Toast>
+
+   
+
+    </div>
+
     </div>
     </>
   );

@@ -28,6 +28,10 @@ class Auth {
     return this.authenticated;
   }
 
+  getName(){
+    let name = localStorage.getItem('firstName').concat(" ").concat(localStorage.getItem('lastName'))
+    return name
+  }
 
 
 }

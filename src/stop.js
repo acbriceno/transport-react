@@ -27,10 +27,14 @@ export const StopsPage = props => {
  
   if(loading){return (<p> Loading... </p>)}
   if(error) { return ( <p> error.. </p>)}
+console.log(loading)
+console.log(error)
+console.log(data)
 
-
+  
  const stopsList = data.stops.stops.map((stop) =>
-  <ListGroup.Item key={stop.id}> 
+<React.Fragment key={stop.id}>
+   <ListGroup.Item key={stop.id}> 
 
   <div className="row">
     <div className="col-sm-6">
@@ -42,6 +46,7 @@ export const StopsPage = props => {
     </div>
   </div>
   </ListGroup.Item>
+</React.Fragment>
  )
 
  
@@ -52,5 +57,7 @@ export const StopsPage = props => {
       <ListGroup>{stopsList}</ListGroup>
     </>
   );
+
+
 };
 

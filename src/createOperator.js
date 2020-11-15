@@ -3,34 +3,44 @@ import auth from "./auth";
 import roleManager from './RoleManager'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
+import Toast from 'react-bootstrap/Toast'
 import {gql, useMutation} from '@apollo/client'
-const  createOperatorBareBonesM = gql `
-    mutation CreateBareBones($lat: String!, $lon: String!, $name: String!, $location: String!, $type: StopType!){
-      createStop(lat: $lat, lon: $lon, name: $name, location: $location, type: $type){
+
+const  createBareOperatorM = gql `
+    mutation createBareOperator($user: BareBonesUserInput!, $operator: OperatorInput! ){
+      createBareOperator(user: $user, operator: $operator){
         status
         code
-        ... on StopResponse{
-          id
-          name
-          lat 
-          lon
-          type
-          location
+        ... on BareOperatorResponse {
+        operatorRole
         }
-
       }
     }
   `
 
- const initialState = {
+
+
+ var initialState = {
   email: '',
   password: '',
   firstName: '',
   lastName: '',
   operatorLicenseNo: '',
-  operatorName: ''
+  operatorName: '',
+  role: "OPERATOR"
  }
 
+const resetState = {
+  email: '',
+  password: '',
+  firstName: '',
+  lastName: '',
+  operatorLicenseNo: '',
+  operatorName: '',
+  role: "OPERATOR"
+ }
+
+//needs for implement reset state function to allow continues use of the form after the ui has been cleared
 
 
 
@@ -39,22 +49,28 @@ export const CreateOperatorPage = props => {
   // props.history.push(roleManager.getStartingRoute(auth.getRole())) 
 // }
   const [state, setState] = useState(initialState)
-  const [error, setError] = useState('')
+  const [errors, setErrors] = useState('')
+  const [show, setShow] = useState(false)
 
-
-  const [createStop, { loading, gqlError, data }] = useMutation(createOperatorBareBonesM, {
+  const [createBareOperator, { loading, error, data }] = useMutation(createBareOperatorM, {
     onCompleted: (data) =>{
       if(data !== undefined ){
-       console.log(data)
-        if(data.createStop === null){
+       //console.log(data)
+        if(data.createBareOperator === null){
         }else{
-        
+          if(!data.createBareOperator.status){
+            return (<p> Operator no created </p>)
+          }
+          initialState = resetState
+          setState(resetState)
+          setShow(true)
+
         }
 
       }
 
     },
-    onError: (gqlError) => console.error("Error", gqlError)
+    onError: (error) => console.error("Error",error)
   })
 
   if(loading){return (<p> Loading... </p>)}
@@ -62,7 +78,7 @@ export const CreateOperatorPage = props => {
   async function handleCreateOperator() {
     //event.preventDefault();
       console.log(state)  
-    //createStop({ variables: { lat: state.lat, lon: state.lon, name: state.name, location: state.location, type: state.type } });
+   createBareOperator({ variables: {user:{email: state.email, password: state.password, firstName: state.firstName, lastName: state.lastName, role:{role: state.role} }, operator:{name: state.operatorName, licenseNo: state.operatorLicenseNo}} });
   }
 
   const handleSubmit = e => {
@@ -70,14 +86,14 @@ export const CreateOperatorPage = props => {
 
     for(let key in state){
       if(state[key] === ''){
-        setError(`You must provide the input ${key}`)
-        console.log(error)
+        setErrors(`You must provide the input ${key}`)
+        console.log(errors)
         return
       }
     
     }
 
-    setError('')
+    setErrors('')
 
     handleCreateOperator()
   }
@@ -90,8 +106,9 @@ export const CreateOperatorPage = props => {
  
   return (
     <>
+    <div className="row">
     <div className="col-md-4 col-md-offset-4">
-    { error && ( <p>{error}</p>)
+    { errors && ( <p>{errors}</p>)
     }
       <form noValidate>
 
@@ -116,6 +133,26 @@ export const CreateOperatorPage = props => {
               </Form.Group>
         <Button size="sm" onClick={e => handleSubmit(e)}>Create Operator</Button>
       </form>
+
+     </div>
+
+    <div className="col-md-4">
+   <Toast onClose={() => setShow(false)} show={show} delay={2300} autohide>
+          <Toast.Header>
+            <img
+              src="holder.js/20x20?text=%20"
+              className="rounded mr-2"
+              alt=""
+            />
+            <strong className="mr-auto">Transport Management</strong>
+            <small>Just now</small>
+          </Toast.Header>
+          <Toast.Body>Operator Account Created</Toast.Body>
+        </Toast>
+
+   
+
+    </div>
     </div>
     </>
   );
