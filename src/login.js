@@ -85,6 +85,11 @@ export const LoginPage = props => {
     setState(prev => ({...prev, [inputName]: value}))
   }
  
+const handleRegister = e => {
+ props.history.push("/register") 
+
+  }
+ 
 
 
  //baseLogin({ variables: { email: "tester@admin.com", password: "12345" } });
@@ -119,8 +124,11 @@ export const LoginPage = props => {
           <Form.Control size="sm" type="password"  placeholder="" name="password" value={state.password} onChange={handleInput} />
           </Form.Group>
           <Button size="sm" onClick={e => handleSubmit(e)}>Login</Button>
-      </form>
+          <p></p>
+          
 
+      </form>
+      <Button size="sm" onClick={e => handleRegister(e)}>Register Page</Button>
     </div>
 
 
