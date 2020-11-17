@@ -63,6 +63,8 @@ const dayNames = [
 ]
 
 const initialState = {
+  search: "",
+  historyRoutes: [],
   days: [
     false, false, false, false, false, false, false  
   ],
@@ -72,6 +74,8 @@ const initialState = {
 }
 
 const resetState = {
+  search: "",
+  historyRoutes: [],
   days: [],
   stops: [],
   routes: [],
@@ -90,6 +94,7 @@ function HomePage(props) {
       let days = state.days
       days[todaysDate.getDay()] = true
       let displayRoutes = []
+      let historyRoutes = []
       for(const route of routesData.activeOperatorRoutes.operatorRoutes){
         for(const schedule of route.schedule){
           if(schedule.day === dayNames[todaysDate.getDay()]){
@@ -102,11 +107,26 @@ function HomePage(props) {
                 schedule: schedule
             }
             displayRoutes = displayRoutes.concat(tempRoute)
+            
           }
+
+                let tempHRoute = {
+                id: route.id,
+                route: route.route,
+                operatorId: route.operatorId,
+                routeType: route.routeType,
+                intermediaries: route.intermediaries,
+                schedule: schedule
+                 }
+            historyRoutes = historyRoutes.concat(tempHRoute)
+
+        
         }
       }
+        
       return {
         ...state,
+        historyRoutes: historyRoutes,
         displayRoutes: displayRoutes,
         days: days,
         routes: routesData.activeOperatorRoutes.operatorRoutes,
@@ -174,13 +194,83 @@ console.log(state)
     
    </React.Fragment>
 )
+
+  const onKeyDown = e =>{
+    if (e.keyCode === 8) {
+     console.log('delete');
+
+      setState(state =>{
+        let displayRoutes = state.historyRoutes
+
+        return {
+          ...state,
+          search: e.value,
+          displayRoutes: displayRoutes
+        }
+      }, () => {
+        const search = state.search
+        searchChangeState(search)
+      })
+
+    }
+  }
   const handleSearchInput = e => {
     e.preventDefault()
-    console.log(e.target.value) 
+    console.log(e.target) 
+    
+    if(e.keyCode !== 8){
+    searchChangeState(e.target.value)
+    }
+  }
 
+  const searchChangeState = input => {
 
+    setState(state => {
+      let displayRoutes = []
+      let searchFilter = input.toUpperCase().trim()
+      console.log("search filter")
+      console.log(searchFilter)
+      for(const route of state.displayRoutes){
+        if( (getStopName(route.route.startStopId).toUpperCase().indexOf(searchFilter) >-1) || (getStopName(route.route.endStopId).toUpperCase().indexOf(searchFilter) >-1) || (getStopName(route.route.startStopId).replace(/\s+/g, '').toUpperCase().indexOf(searchFilter) >-1) ||  (getStopName(route.route.endStopId).replace(/\s+/g, '').toUpperCase().indexOf(searchFilter) >-1)    ){
+              console.log("match first search")
+              let tempRoute = {
+              id: route.id,
+              route: route.route,
+              operatorId: route.operatorId,
+              routeType: route.routeType,
+              intermediaries: route.intermediaries,
+              schedule: route.schedule
+            }
+            displayRoutes = displayRoutes.concat(tempRoute)
+            console.log(displayRoutes)
+      
+        }else{
+          console.log("failed 1st search")
+            for(const intermediary of route.intermediaries){
+              if((getStopName(intermediary.stopId).toUpperCase().indexOf(searchFilter) >-1 ) 
+                  || (getStopName(intermediary.stopId).toUpperCase().replace(/\s+/g, '').indexOf(searchFilter) >-1 )
+              ){
+               let tempRoute = {
+                id: route.id,
+                route: route.route,
+                operatorId: route.operatorId,
+                routeType: route.routeType,
+                intermediaries: route.intermediaries,
+                schedule: route.schedule
+              }
+              displayRoutes = displayRoutes.concat(tempRoute)
 
+            }
+          }
+        }
+      }
+    
+      return {
+        ...state,
+        displayRoutes: displayRoutes
+      }
 
+    })
   }
  
   const handleCheckInput = e => {
@@ -207,7 +297,7 @@ console.log(state)
               operatorId: route.operatorId,
               routeType: route.routeType,
               intermediaries: route.intermediaries,
-              schedule: schedule
+              schedule: route.schedule
             }
             displayRoutes = displayRoutes.concat(tempRoute)
               
@@ -225,7 +315,7 @@ console.log(state)
         }
       }
 
-      
+     console.log("displayroutes") 
       console.log(displayRoutes) 
       return{
         ...state,
@@ -272,6 +362,7 @@ console.log(state)
       aria-label="search input"
       aria-describedby="basic-addon2"
       onChange={handleSearchInput}
+      onKeyDown={onKeyDown}
     />
     <InputGroup.Append>
       <Button variant="outline-secondary">Search</Button>
