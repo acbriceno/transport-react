@@ -151,14 +151,6 @@ export const RegisterPage = props => {
   }
 
 
-  const handleLoginPage = e => {
-
-  props.history.push("login") 
-
-    
-  }
-
-
   console.log(state) 
   const securityQuestionsList = securityQuestions.map((securityQuestion, idx) => 
    <option key={idx}>{securityQuestion}</option>
@@ -217,7 +209,6 @@ export const RegisterPage = props => {
         <Button size="sm" onClick={e => handleSubmit(e)}>Register</Button>
       </form>
     <br></br>
-    <Button size="sm" onClick={e => handleLoginPage(e)}>Login Page</Button>
 
      </div>
 

@@ -4,12 +4,28 @@ import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 export const NavBar = props => {
-  return (
-    <>
-    <Row>
-     <Col></Col>
-    <Col xs={6}></Col>
-  <p> Welcome {auth.getName()}</p>
+ 
+
+  const redirectLogin = e => {
+     props.history.push("/login");
+
+  }
+
+ const redirectRegister = e => {
+     props.history.push("/register");
+
+  }
+ const redirectHome = e => {
+     props.history.push("/");
+
+  }
+
+  const displayHeader = ()=>{
+
+    if(auth.getRole() !== null ){
+      return (
+        <>
+        <p>Welcome {auth.getName()}</p>
     <Col>
     <Button size="sm"
         onClick={() => {
@@ -18,7 +34,33 @@ export const NavBar = props => {
           });
         }}
         > Logout </Button>
+      </Col>
+        </>
+      )
+    }else{
+    return (
+    <Col>
+     <Button size="sm" className="btn-space btn-info"
+        onClick={redirectHome}
+        >Home</Button>
+      <Button size="sm" className="btn-space"
+        onClick={redirectLogin}
+        >Login</Button>
+        <Button size="sm" className="btn-success"
+        onClick={redirectRegister}
+        >Register</Button>
+
     </Col>
+    )
+    }
+  }
+
+  return (
+    <>
+    <Row className="header-bg">
+     <Col></Col>
+    <Col xs={6}></Col>
+    {displayHeader()}
     </Row>
   </>
   )
