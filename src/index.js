@@ -12,6 +12,8 @@ import { setContext } from '@apollo/client/link/context';
 import {OperatorContainer} from './OperatorContainer'
 import {RegisterPage} from './register'
 import HomePage from './home'
+import GetPassPage from './getPass'
+import {CommuterContainer} from './CommuterContainer'
 import {HomeContainer} from './HomeContainer'
 import {LoginContainer} from './LoginContainer'
 import {RegisterContainer} from './RegisterContainer'
@@ -61,7 +63,8 @@ function AppController() {
        <HomeContainer exact path="/" component={HomePage}/> 
         <RegisterContainer exact path ="/register" component={RegisterPage}/>
         <LoginContainer exact path="/login" component={LoginPage} />
-        <AdminContainer exact path="/admin" component={Admin}/> 
+        <AdminContainer exact path="/admin" component={Admin}/>
+        <CommuterContainer exact path="/getpass" component={GetPassPage}/>
        <OperatorContainer exact path="/operator" component={Operator}/>
      // <ProtectedRoute exact path="/admin" component={Admin} />
         <Route path="*" component={() => "404 NOT FOUND"} />

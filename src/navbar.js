@@ -27,6 +27,9 @@ export const NavBar = props => {
         <>
         <p>Welcome {auth.getName()}</p>
     <Col>
+   <Button size="sm" className="btn-space btn-info"
+        onClick={redirectHome}
+        >Home</Button>
     <Button size="sm"
         onClick={() => {
           auth.removeAuth(() => {

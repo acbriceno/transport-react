@@ -70,7 +70,9 @@ const initialState = {
   ],
   stops: [],
   routes: [],
-  displayRoutes: []
+  displayRoutes: [],
+  searchFilter: false,
+  dayFilter: false
 }
 
 const resetState = {
@@ -79,8 +81,11 @@ const resetState = {
   days: [],
   stops: [],
   routes: [],
-  displayRoutes: []
+  displayRoutes: [],
+  searchFilter: false,
+  dayFilter: false
 }
+const displayCheck = false
 const todayDate = new Date()
 const accessRole = "COMMUTER"
 function HomePage(props) {
@@ -138,92 +143,9 @@ function HomePage(props) {
       }
     })
   },[routesData])
-  if(stopsLoading){return (<p> Loading... </p>)}
-  if(stopsError) { return ( <p> error.. </p>)}
-  if(routesLoading){return (<p> Loading... </p>)}
-  if(routesError) { return ( <p> error.. </p>)}
-
-   
-console.log(stopsLoading)
-console.log(stopsError)
-console.log(stopsData)
-console.log(routesData)
-console.log(state)
-  
- const stopsList = stopsData.stops.stops.map((stop) =>
-<React.Fragment key={stop.id}>
-  <option key={stop.id}>{stop.name}</option>
-</React.Fragment>
- )
- const getStopName = (id)=>{
-    for(const stop of state.stops){
-      if(id === stop.id){
-        return stop.name
-      }
-      
-    }
-      console.log("no match")
-      return id
-  }
 
 
-  const getIntermediariesDisplay = (displayRouteId) =>{
-    let intermediaries = state.displayRoutes[displayRouteId].intermediaries
-    
-   return intermediaries.map((intermediary, idx) => 
-  <React.Fragment key="intermediary.id">
-    <tr className="table-primary">
-      <td>In Between Stop</td> 
-     <td colspan="2" className="text-center">{getStopName(intermediary.stopId)}</td> 
-     <td>{intermediary.time}</td>
-    </tr>
-   </React.Fragment>
-)
-
-  }
-
- const displayRoutesList = state.displayRoutes.map((route, idx) => 
-  <React.Fragment key="route.id">
-    <tr>
-     <td>{route.schedule.departureTime}</td> 
-     <td>{getStopName(route.route.startStopId)}</td>
-      <td>{getStopName(route.route.endStopId)}</td>
-      <td>{route.schedule.arrivalTime}</td>
-    </tr>
-    {getIntermediariesDisplay(idx)} 
-    
-   </React.Fragment>
-)
-
-  const onKeyDown = e =>{
-    if (e.keyCode === 8) {
-     console.log('delete');
-
-      setState(state =>{
-        let displayRoutes = state.historyRoutes
-
-        return {
-          ...state,
-          search: e.value,
-          displayRoutes: displayRoutes
-        }
-      }, () => {
-        const search = state.search
-        searchChangeState(search)
-      })
-
-    }
-  }
-  const handleSearchInput = e => {
-    e.preventDefault()
-    console.log(e.target) 
-    
-    if(e.keyCode !== 8){
-    searchChangeState(e.target.value)
-    }
-  }
-
-  const searchChangeState = input => {
+const searchChangeState = (input, control) => {
 
     setState(state => {
       let displayRoutes = []
@@ -267,53 +189,225 @@ console.log(state)
     
       return {
         ...state,
-        displayRoutes: displayRoutes
+        search: input,
+        displayRoutes: displayRoutes,
+        searchFilter: control ? !state.searchFilter : state.searchFilter
       }
 
     })
   }
+
+
+const onKeyDown = e =>{
+    if (e.keyCode === 8) {
+     console.log('delete');
+
+      setState(state =>{
+        let displayRoutes = state.historyRoutes
+
+        return {
+          ...state,
+          search: e.value,
+          dayFilter: !state.dayFilter,
+          displayRoutes: displayRoutes
+        }
+      })
+
+    }
+  }
+
+const dayFilterChangeState = (dayState, control) =>{
+      let dayNamesTrue = [] 
+      if(dayState.includes(true)){
+
+
+        setState(state => {
+         var daysTrue = dayState.reduce((daysTrue, day, id) => {
+            if(day){
+              daysTrue = daysTrue.concat(dayNames[id])
+            }
+           return daysTrue
+          }, [])
+
+          console.log(daysTrue)
+          let displayRoutes = []
+          for(const route of state.historyRoutes){
+            if(daysTrue.includes(route.schedule.day)){
+              displayRoutes = displayRoutes.concat(route)
+            }
+          }
+        
+          return {
+            ...state,
+            displayRoutes: displayRoutes,
+            days: dayState,
+            searchFilter: control ? !state.searchFilter : state.searchFilter
+          }
+
+        })
+
+      }else{
+          setState(state =>{
+            console.log(state.days)
+        return {
+          ...state,
+          searchFilter: control ? !state.searchFilter : state.searchFilter,
+          displayRoutes: state.historyRoutes
+        }
+      })
+      }
+    console.log("testing day Filter")
+
+  }
+
+
+useEffect(() => {
+  
+console.log("updating use effec display routes");
+  const search = state.search
+  console.log("to apply search filter")
+  searchChangeState(search, false)
+
+}, [state.searchFilter]);
+
+
+
+useEffect(() => {
+  
+console.log("updating use effec display routes");
+  const days = state.days
+  console.log("to apply day filter")
+  dayFilterChangeState(days, false)
+
+}, [state.dayFilter]);
+
+  if(stopsLoading){return (<p> Loading... </p>)}
+  if(stopsError) { return ( <p> error.. </p>)}
+  if(routesLoading){return (<p> Loading... </p>)}
+  if(routesError) { return ( <p> error.. </p>)}
+
+   
+console.log(stopsLoading)
+console.log(stopsError)
+console.log(stopsData)
+console.log(routesData)
+console.log(state)
+  
+ const stopsList = stopsData.stops.stops.map((stop) =>
+<React.Fragment key={stop.id}>
+  <option key={stop.id}>{stop.name}</option>
+</React.Fragment>
+ )
+ const getStopName = (id)=>{
+    for(const stop of state.stops){
+      if(id === stop.id){
+        return stop.name
+      }
+      
+    }
+      console.log("no match")
+      return id
+  }
+
+
+  const getIntermediariesDisplay = (displayRouteId) =>{
+    let intermediaries = state.displayRoutes[displayRouteId].intermediaries
+    
+   return intermediaries.map((intermediary, idx) => 
+  <React.Fragment key="idx">
+    <tr className="table-primary">
+      <td>In Between Stop</td> 
+     <td colspan="2" className="text-center">{getStopName(intermediary.stopId)}</td> 
+     <td>{intermediary.time}</td>
+    </tr>
+   </React.Fragment>
+)
+
+  }
+const handleGetPass = e => {
+  e.preventDefault()
+  if(auth.getRole() !== null){
+    if(auth.getRole() === "COMMUTER"){
+      console.log("match commuter")
+      props.history.push({
+        pathname: "/getpass", 
+        getPassRoute: state.displayRoutes[e.target.dataset.id]
+      })
+    }
+  }else{
+    props.history.push({
+    pathname: "/login",
+    getPassRoute: state.displayRoutes[e.target.dataset.id]
+  }
+  )
+
+  }
+ }
+ const displayRoutesList = state.displayRoutes.map((route, idx) => 
+  <React.Fragment key="route.id">
+    <tr>
+      <td>{route.schedule.day}</td>
+     <td>{route.schedule.departureTime}</td> 
+     <td>{getStopName(route.route.startStopId)}</td>
+      <td>{getStopName(route.route.endStopId)}</td>
+      <td>{route.schedule.arrivalTime}</td>
+      <td className="text-center"><Button size="sm" className="btn-success" onClick={handleGetPass} data-id={idx}>GetPass</Button> </td>
+    </tr>
+   <tr></tr>
+    {getIntermediariesDisplay(idx)} 
+    
+   </React.Fragment>
+)
+
+    const handleSearchInput = e => {
+    e.preventDefault()
+    console.log(e.target) 
+    
+    if(e.keyCode !== 8){
+    searchChangeState(e.target.value)
+    }
+  }
+
+  
+
+  
+  const handleDayCheckInput = e => {
+      let days = state.days
+      days[parseInt(e.target.dataset.id)] = !days[e.target.dataset.id]
+      dayFilterChangeState(days ,false)
+  }
+
  
   const handleCheckInput = e => {
     console.log(e.target)
     setState(state =>{
+      let counter = 0
       let days = state.days
       days[parseInt(e.target.dataset.id)] = !days[e.target.dataset.id]
-      let dayName = dayNames[e.target.dataset.id]
-      let displayRoutes = state.displayRoutes
-
-      if(days[e.target.dataset.id]){
-
-        let routes = state.routes
-        console.log("ready to make things happen")
-        console.log(days[e.target.dataset.id])
-        console.log("make")
-        for(const route of routes){
-        for(const schedule of route.schedule){
-          if(schedule.day === dayName){
-            console.log("day matched")
-            let tempRoute = {
-              id: route.id,
-              route: route.route,
-              operatorId: route.operatorId,
-              routeType: route.routeType,
-              intermediaries: route.intermediaries,
-              schedule: route.schedule
-            }
-            displayRoutes = displayRoutes.concat(tempRoute)
-              
+      for(const day of days){
+        if(!day){counter++}
+      }
+      console.log(counter)
+      if(counter === 7){
+          return {
+            ...state,
+            displayRoutes: state.historyRoutes
           }
+      }
+      let dayName = dayNames[e.target.dataset.id]
+      
+      let displayRoutes = []
+      if(days[e.target.dataset.id]){
+         for(const route of state.displayRoutes){
+        if(route.schedule.day === dayName){
+            displayRoutes = displayRoutes.concat(route)
         }
       }
 
       }else{
-        displayRoutes = []
-        for(const route of state.displayRoutes){
-            if(route.schedule.day !== dayName){
-              displayRoutes = displayRoutes.concat(route)
 
-            }
-        }
       }
+      
 
      console.log("displayroutes") 
       console.log(displayRoutes) 
@@ -339,7 +433,7 @@ console.log(state)
   const daysList = dayNames.map((day, idx) => 
 
     <React.Fragment key={idx}>
-     <Form.Check inline label={day} type="checkbox" data-id={idx} checked={state.days[idx]} onChange={handleCheckInput}/> 
+     <Form.Check inline label={day} type="checkbox" data-id={idx} checked={state.days[idx]} onChange={handleDayCheckInput}/> 
     </React.Fragment>
   )
  
@@ -363,6 +457,7 @@ console.log(state)
       aria-describedby="basic-addon2"
       onChange={handleSearchInput}
       onKeyDown={onKeyDown}
+      value={state.search}
     />
     <InputGroup.Append>
       <Button variant="outline-secondary">Search</Button>
@@ -381,6 +476,7 @@ console.log(state)
     <Table striped bordered hover className="table-sm">
       <thead>
         <tr>
+          <th>Day </th>
           <th>Departure Time</th>
           <th>Departure Stop</th>
           <th>Arrival Stop</th>
