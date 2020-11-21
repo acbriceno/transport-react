@@ -331,13 +331,14 @@ const handleGetPass = e => {
       console.log("match commuter")
       props.history.push({
         pathname: "/getpass", 
-        getPassRoute: state.displayRoutes[e.target.dataset.id]
+        getPassRoute: {route: state.displayRoutes[e.target.dataset.id], startStopName: getStopName(state.displayRoutes[e.target.dataset.id].route.startStopId), endStopName: getStopName(state.displayRoutes[e.target.dataset.id].route.endStopId)}
       })
     }
   }else{
     props.history.push({
     pathname: "/login",
-    getPassRoute: state.displayRoutes[e.target.dataset.id]
+    getPassRoute: {route: state.displayRoutes[e.target.dataset.id], startStopName: getStopName(state.displayRoutes[e.target.dataset.id].route.startStopId), endStopName: getStopName(state.displayRoutes[e.target.dataset.id].route.endStopId)}
+
   }
   )
 
@@ -374,7 +375,7 @@ const handleGetPass = e => {
   const handleDayCheckInput = e => {
       let days = state.days
       days[parseInt(e.target.dataset.id)] = !days[e.target.dataset.id]
-      dayFilterChangeState(days ,false)
+      dayFilterChangeState(days ,true)
   }
 
  

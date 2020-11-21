@@ -13,6 +13,7 @@ import {OperatorContainer} from './OperatorContainer'
 import {RegisterPage} from './register'
 import HomePage from './home'
 import GetPassPage from './getPass'
+import PassesPage from './Passes'
 import {CommuterContainer} from './CommuterContainer'
 import {HomeContainer} from './HomeContainer'
 import {LoginContainer} from './LoginContainer'
@@ -65,6 +66,7 @@ function AppController() {
         <LoginContainer exact path="/login" component={LoginPage} />
         <AdminContainer exact path="/admin" component={Admin}/>
         <CommuterContainer exact path="/getpass" component={GetPassPage}/>
+     <CommuterContainer exact path="/passes" component={PassesPage}/>
        <OperatorContainer exact path="/operator" component={Operator}/>
      // <ProtectedRoute exact path="/admin" component={Admin} />
         <Route path="*" component={() => "404 NOT FOUND"} />

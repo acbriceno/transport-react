@@ -20,9 +20,42 @@ export const NavBar = props => {
 
   }
 
+
+  const redirectPasses = e => {
+     props.history.push("/passes");
+
+  }
+
+
   const displayHeader = ()=>{
 
     if(auth.getRole() !== null ){
+    
+      if(auth.getRole() === "COMMUTER"){
+      return (
+        <>
+        <p>Welcome {auth.getName()}</p>
+    <Col>
+   <Button size="sm" className="btn-space btn-info"
+        onClick={redirectHome}
+        >Home</Button>
+ <Button size="sm" className="btn-space btn-info"
+        onClick={redirectPasses}
+        >Passes</Button>
+
+    <Button size="sm"
+        onClick={() => {
+          auth.removeAuth(() => {
+            props.history.push("/");
+          });
+        }}
+        > Logout </Button>
+      </Col>
+        </>
+      )
+
+      }
+
       return (
         <>
         <p>Welcome {auth.getName()}</p>
@@ -40,6 +73,9 @@ export const NavBar = props => {
       </Col>
         </>
       )
+
+
+
     }else{
     return (
     <Col>

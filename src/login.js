@@ -27,6 +27,8 @@ const initialState = {
   email: '',
   password: ''
 }
+var tester = true
+var routeGetPass
 export const LoginPage = props => {
  if(auth.getRole() != null){
    props.history.push(roleManager.getStartingRoute(auth.getRole())) 
@@ -48,7 +50,16 @@ export const LoginPage = props => {
           user: data.baseLogin.user,
         }
         auth.setAuth(authPayload)
-        props.history.push(roleManager.getStartingRoute(auth.getRole())) 
+         if(props.location.getPassRoute !== undefined && auth.getRole() === "COMMUTER"){
+            props.history.push({
+              pathname: "/getpass", 
+              getPassRoute: props.location.getPassRoute
+            })
+
+
+           }else{
+              props.history.push(roleManager.getStartingRoute(auth.getRole())) 
+           }
       }
 
   }
@@ -60,6 +71,9 @@ export const LoginPage = props => {
   if(loading){return (<p> Loading... </p>)}
   
 
+ if(props.location.getPassRoute !== undefined){
+  routeGetPass = <p>Commuter Login is needed to get pass</p>
+  }
 
  const handleSubmit = e => {
     e.preventDefault()
@@ -104,7 +118,7 @@ export const LoginPage = props => {
 
  <Jumbotron>
       <h2 className="text-center">Belize Transport Online</h2>
-
+      {routeGetPass}
     <div className="col-md-4 col-md-offset-4">
     { errors && ( <p>{errors}</p>)
     }
