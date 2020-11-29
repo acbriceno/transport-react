@@ -96,7 +96,7 @@ export const NavBar = props => {
 
   return (
     <>
-    <Row className="header-bg">
+    <Row className="nav-bg">
      <Col></Col>
     <Col xs={6}></Col>
     {displayHeader()}

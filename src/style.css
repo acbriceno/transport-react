@@ -5,11 +5,45 @@
 {
   margin-right:0.5rem;
 }
-
-.header-bg{
-  background-color: #87afd7  
+.btn-space-large
+{
+  margin-right:2rem;
 }
+.header-bg{
+  background-color: #87afd7;
+  padding: 5px
+}
+.nav-bg{
+  background-color: #3c6a97;
+  padding: 5px
+}
+.vip-bg{
+ 
+  background-color: #3d5061;
+  padding: 5px
+}
+.white-text{
+color: white;
+}
+.light-text{
+  color: rgb(228, 242, 250);
+  }
 
 .body-bg{
-background-color: #afd7ff
+background-color: #3d5061
+
+}
+
+.header-control{
+background-size: cover;
+background-image: url(/src/assets/header.jpg);
+}
+
+.table-schedule{
+  padding: 10px
+}
+
+.table-hover tbody tr:hover td {
+  background: #3c6a97;
+  color: white;
 }

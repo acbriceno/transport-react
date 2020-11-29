@@ -8,6 +8,8 @@ import Form from 'react-bootstrap/Form'
 import Table from 'react-bootstrap/Table'
 import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
+import Card from 'react-bootstrap/Card'
+import Accordion from 'react-bootstrap/Accordion'
 import auth from './auth'
 
 
@@ -72,7 +74,10 @@ const initialState = {
   routes: [],
   displayRoutes: [],
   searchFilter: false,
-  dayFilter: false
+  dayFilter: false,
+  startingStop: "",
+  endingStop: "",
+  routeType: ""
 }
 
 const resetState = {
@@ -83,7 +88,10 @@ const resetState = {
   routes: [],
   displayRoutes: [],
   searchFilter: false,
-  dayFilter: false
+  dayFilter: false,
+  startingStop: "",
+  endingStop: "",
+  routeType: ""
 }
 const displayCheck = false
 const todayDate = new Date()
@@ -199,7 +207,7 @@ const searchChangeState = (input, control) => {
 
 
 const onKeyDown = e =>{
-    if (e.keyCode === 8) {
+    if (e.keyCode === 8 && state.search !== '') {
      console.log('delete');
 
       setState(state =>{
@@ -295,7 +303,7 @@ console.log(state)
   
  const stopsList = stopsData.stops.stops.map((stop) =>
 <React.Fragment key={stop.id}>
-  <option key={stop.id}>{stop.name}</option>
+  <option key={stop.id} value={stop.id}>{stop.name}</option>
 </React.Fragment>
  )
  const getStopName = (id)=>{
@@ -315,7 +323,7 @@ console.log(state)
     
    return intermediaries.map((intermediary, idx) => 
   <React.Fragment key="idx">
-    <tr className="table-primary">
+    <tr className="light-text">
       <td>In Between Stop</td> 
      <td colspan="2" className="text-center">{getStopName(intermediary.stopId)}</td> 
      <td>{intermediary.time}</td>
@@ -345,14 +353,15 @@ const handleGetPass = e => {
   }
  }
  const displayRoutesList = state.displayRoutes.map((route, idx) => 
+ //   <td className="text-center"><Button size="sm" className="btn-success" onClick={handleGetPass} data-id={idx}>GetPass</Button> </td>
   <React.Fragment key="route.id">
-    <tr>
+    <tr className="white-text">
       <td>{route.schedule.day}</td>
      <td>{route.schedule.departureTime}</td> 
      <td>{getStopName(route.route.startStopId)}</td>
       <td>{getStopName(route.route.endStopId)}</td>
-      <td>{route.schedule.arrivalTime}</td>
-      <td className="text-center"><Button size="sm" className="btn-success" onClick={handleGetPass} data-id={idx}>GetPass</Button> </td>
+      <td>{route.schedule.arrivalTime} <Button size="sm" className="btn-space-large btn-success" onClick={handleGetPass} data-id={idx}>GetPass</Button> </td>
+   
     </tr>
    <tr></tr>
     {getIntermediariesDisplay(idx)} 
@@ -364,7 +373,7 @@ const handleGetPass = e => {
     e.preventDefault()
     console.log(e.target) 
     
-    if(e.keyCode !== 8){
+    if(e.keyCode !== 8 && state.search !== ''){
     searchChangeState(e.target.value)
     }
   }
@@ -434,19 +443,55 @@ const handleGetPass = e => {
   const daysList = dayNames.map((day, idx) => 
 
     <React.Fragment key={idx}>
-     <Form.Check inline label={day} type="checkbox" data-id={idx} checked={state.days[idx]} onChange={handleDayCheckInput}/> 
+     <Form.Check className= "white-text"inline label={day} type="checkbox" data-id={idx} checked={state.days[idx]} onChange={handleDayCheckInput}/> 
     </React.Fragment>
   )
  
+  const handleVIPInput = e => {
+    const inputName = e.currentTarget.name
+    const value = e.currentTarget.value
+    setState(prev => ({...prev, [inputName]: value}))
+  }
+
+  const handleVIPGetPass = e => {
+    e.preventDefault()
+    if(state.routeType === 'Select...' || state.routeType === ''){return}
+    if(state.startingStop === 'Select...' || state.startingStop === ''){return}
+    if(state.endingStop === 'Select...' || state.endingStop === ''){return}
+    const route = {
+      route:{
+        startStopId: state.startingStop,
+        endStopId: state.endingStop
+      },
+      routeType: state.routeType
+    }
+    if(auth.getRole() !== null){
+      if(auth.getRole() === "COMMUTER"){
+        console.log("match commuter")
+        props.history.push({
+          pathname: "/getpass", 
+          getPassRoute: {route: route, startStopName: getStopName(state.startingStop), endStopName: getStopName(state.endingStop)}
+        })
+      }
+    }else{
+      props.history.push({
+      pathname: "/login",
+      getPassRoute: {route: route, startStopName: getStopName(state.startingStop), endStopName: getStopName(state.endingStop)}
   
+    }
+    )
+  
+    }
+   }
 
   return (
     <>
 
-
-    <Jumbotron className="body-bg">
+    
+    <Jumbotron className="header-control">
+    <br></br>
     <div className="row"> 
-    <div className="col-md-2"> </div>
+    <div className="col-md-3"> </div>
     <Form>
     
       <div className="col-md-12">
@@ -460,59 +505,57 @@ const handleGetPass = e => {
       onKeyDown={onKeyDown}
       value={state.search}
     />
-    <InputGroup.Append>
-      <Button variant="outline-secondary">Search</Button>
-    </InputGroup.Append>
+  
   </InputGroup>
     </div>
       <br></br>
         {daysList}
     <br></br>
       </div>
-
- 
+      <br></br>
+      
+  <br></br>
     </Form>
     </div>
     
-    <Table striped bordered hover className="table-sm">
-      <thead>
-        <tr>
-          <th>Day </th>
-          <th>Departure Time</th>
-          <th>Departure Stop</th>
-          <th>Arrival Stop</th>
-          <th>Arrival Time</th> 
-        </tr>
-      </thead>
-      <tbody>
-        {displayRoutesList} 
-      </tbody>
-    </Table>
     </Jumbotron>
-      <Jumbotron className="body-bg">
+    <div className="row">
+    <div className="col-md-1"></div>
+    <div className="col-md-10">
       <div className="row">
-        <div className="col-md-2"></div>
-        <div className="col-md-8">
+      <div className="col-md-2"></div>
+      <div className="col-md-8">
+      <Accordion >
+  <Card>
+    <Accordion.Toggle as={"control1"} eventKey="0" className="text-center">
+      Get VIP Pass 
+    </Accordion.Toggle>
+    <Accordion.Collapse eventKey="0">
+     <Card.Body className="vip-bg">
+     
+      <div className="row">
+        
+        <div className="col-md-12">
           <form>
           <Form.Group>
-        <div className="row text-center">
+        <div className="row text-center white-text">
           <div className="col-md-4">
             <Form.Label>Select Starting Bus Stop </Form.Label>
-            <Form.Control size="sm" as="select" name="startingStop"  >
+            <Form.Control size="sm" as="select" name="startingStop" value={state.startingStop} onChange={handleVIPInput}>
               <option>Select...</option>
               {stopsList}
             </Form.Control> 
           </div>
           <div className="col-md-4 "> 
           <Form.Label >Select Arrival Bus Stop </Form.Label>
-            <Form.Control size="sm" as="select" name="endingStop"  >
+            <Form.Control size="sm" as="select" name="endingStop" value={state.endingStop} onChange={handleVIPInput} >
               <option>Select...</option>
               {stopsList}
           </Form.Control> 
           </div>
           <div className="col-md-4"> 
           <Form.Label>Select Pass Type </Form.Label>
-            <Form.Control size="sm" as="select" name="routeType"  >
+            <Form.Control size="sm" as="select" name="routeType" value={state.routeType} onChange={handleVIPInput}>
               <option>Select...</option>
               <option>EXPRESS</option>
               <option>REGULAR</option>
@@ -525,16 +568,44 @@ const handleGetPass = e => {
       <div className="col-md-5"></div>
     <div classname="col-md-4"> 
       <br></br>    
-      <Button>Buy Pass</Button>
+      <Button onClick={handleVIPGetPass}>Buy Pass</Button>
     </div>
       <div className="col-md-2"></div>
     </div>
     </Form.Group>
           </form>
         </div>
-        <div className="col-md-2"> </div>
+        
       </div>
-      </Jumbotron>   
+           
+       
+    </Card.Body>
+    </Accordion.Collapse>
+  </Card>
+  </Accordion>
+
+      </div>
+      <div className="col-md-2"></div>
+      </div>
+      
+      <br></br>
+    <Table striped bordered  className="table-sm table-hover">
+      <thead>
+        <tr className="white-text">
+          <th>Day </th>
+          <th>Departure Time</th>
+          <th>Departure Stop</th>
+          <th>Arrival Stop</th>
+          <th>Arrival Time</th> 
+        </tr>
+      </thead>
+      <tbody>
+        {displayRoutesList} 
+      </tbody>
+    </Table>
+    </div>
+    <div className="col-md-1"></div>
+    </div>
     </>
   );
 
