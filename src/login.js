@@ -4,6 +4,7 @@ import roleManager from './RoleManager'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Jumbotron from 'react-bootstrap/Jumbotron'
+import Row from 'react-bootstrap/Row'
 import {gql, useMutation} from '@apollo/client'
 const  baseLoginM = gql `
     mutation BaseLogin($email: String!, $password: String!){
@@ -114,31 +115,35 @@ export const LoginPage = props => {
  
   return (
     <>
+ 
+   
+<div className="row center-block jumbotron-fluid ">
 
-
- <Jumbotron>
-      <h2 className="text-center">Belize Transport Online</h2>
+ <div className="col-md-3"></div>
+<div className="col-md-6 text-center primaryBG">
+   <h1 className="text-center white-text">Belize e-Transport</h1>
       {routeGetPass}
-    <div className="col-md-4 col-md-offset-4">
+    <div className="">
     { errors && ( <p>{errors}</p>)
     }
       <form noValidate>
         <Form.Group controlId="v">
-          <Form.Label>E-mail</Form.Label>
+          <Form.Label className="white-text"></Form.Label>
           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-          <Form.Control  size="sm" required type="email" placeholder="" name="email" value={state.email} onChange={handleInput} />
-          <Form.Label>Password</Form.Label>
-          <Form.Control size="sm" type="password"  placeholder="" name="password" value={state.password} onChange={handleInput} />
+          <Form.Control  size="sm" required type="email" placeholder="Email" name="email" value={state.email} onChange={handleInput} />
+          <Form.Label className="white-text"></Form.Label>
+          <Form.Control size="sm" type="password"  placeholder="Password" name="password" value={state.password} onChange={handleInput} />
           </Form.Group>
-          <Button size="sm" onClick={e => handleSubmit(e)}>Login</Button>
+          <Button size="sm " onClick={e => handleSubmit(e)}>Login</Button>
           <p></p>
           
 
       </form>
     </div>
+    </div>
+    </div>
+ <div className="col-md-3"></div>
 
-
-    </Jumbotron>
     </>
   );
 };

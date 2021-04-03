@@ -46,17 +46,29 @@ function PassesPage (props){
 
   const passesList = data.commuter.commuter.passes.map((pass) => {
     return(
+      
     <Pass passId={pass} {...props} />
     )
   })
 
   return (
     <>
-    <div className="container">
+    <div className="container-fluid noP">
+   <h2 className="white-text  text-center primaryTextColor "> Passes </h2>
+ <hr className=""></hr>
       
-      <div className="card-deck">
-      {passesList}
-      </div>
+  </div>
+  <div className="container">
+      <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 ">
+   {passesList}
+
+
+
+
+
+
+  </div>
+  
     </div>
     </>
   )

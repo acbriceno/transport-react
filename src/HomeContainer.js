@@ -13,7 +13,6 @@ export const HomeContainer = ({
         
           return (
             <div> 
-              <NavBar {... props} />
               <Component {...props} />
             </div>
           );

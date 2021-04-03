@@ -1,9 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {useQuery, gql } from '@apollo/client'
 import Jumbotron from 'react-bootstrap/Jumbotron'
-import Container from 'react-bootstrap/Container'
 import ListGroup from 'react-bootstrap/ListGroup'
-import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Table from 'react-bootstrap/Table'
 import InputGroup from 'react-bootstrap/InputGroup'
@@ -11,6 +9,8 @@ import FormControl from 'react-bootstrap/FormControl'
 import Card from 'react-bootstrap/Card'
 import Accordion from 'react-bootstrap/Accordion'
 import auth from './auth'
+import {NavBar} from "./navbar.js"
+import { Container, Button, Row, Col} from 'react-bootstrap'
 
 
 const stops = gql`
@@ -323,7 +323,7 @@ console.log(state)
     
    return intermediaries.map((intermediary, idx) => 
   <React.Fragment key="idx">
-    <tr className="light-text">
+    <tr className="">
       <td>In Between Stop</td> 
      <td colspan="2" className="text-center">{getStopName(intermediary.stopId)}</td> 
      <td>{intermediary.time}</td>
@@ -355,12 +355,12 @@ const handleGetPass = e => {
  const displayRoutesList = state.displayRoutes.map((route, idx) => 
  //   <td className="text-center"><Button size="sm" className="btn-success" onClick={handleGetPass} data-id={idx}>GetPass</Button> </td>
   <React.Fragment key="route.id">
-    <tr className="white-text">
+    <tr className="">
       <td>{route.schedule.day}</td>
      <td>{route.schedule.departureTime}</td> 
      <td>{getStopName(route.route.startStopId)}</td>
       <td>{getStopName(route.route.endStopId)}</td>
-      <td>{route.schedule.arrivalTime} <Button size="sm" className="btn-space-large btn-success" onClick={handleGetPass} data-id={idx}>GetPass</Button> </td>
+      <td>{route.schedule.arrivalTime} <Button size="sm" className="btn-space-large btn-success" onClick={handleGetPass} data-id={idx}>Get Pass</Button> </td>
    
     </tr>
    <tr></tr>
@@ -373,7 +373,7 @@ const handleGetPass = e => {
     e.preventDefault()
     console.log(e.target) 
     
-    if(e.keyCode !== 8 && state.search !== ''){
+    if(e.keyCode !== 8 ){
     searchChangeState(e.target.value)
     }
   }
@@ -443,7 +443,7 @@ const handleGetPass = e => {
   const daysList = dayNames.map((day, idx) => 
 
     <React.Fragment key={idx}>
-     <Form.Check className= "white-text"inline label={day} type="checkbox" data-id={idx} checked={state.days[idx]} onChange={handleDayCheckInput}/> 
+     <Form.Check className= "white-text sText"inline label={day} type="checkbox" data-id={idx} checked={state.days[idx]} onChange={handleDayCheckInput}/> 
     </React.Fragment>
   )
  
@@ -488,15 +488,24 @@ const handleGetPass = e => {
     <>
 
     
-    <Jumbotron className="header-control">
-    <br></br>
-    <div className="row"> 
+    <Jumbotron className="header-control jumbotron-fluid">
+    <NavBar  {...props}/>
+
+<h1 className="text-center white-text sText ">Belize e-Transport </h1> 
+
+    <div className="row homeHeaderContent"> 
     <div className="col-md-3"> </div>
+
     <Form>
     
       <div className="col-md-12">
+  
    <div className="row">
-    <InputGroup >
+
+
+
+
+    <InputGroup  className="sBox">
     <FormControl
       placeholder="Search..."
       aria-label="search input"
@@ -517,7 +526,7 @@ const handleGetPass = e => {
   <br></br>
     </Form>
     </div>
-    
+   <h1 className="text-center white-text sText"> Your Destination Awaits</h1> 
     </Jumbotron>
     <div className="row">
     <div className="col-md-1"></div>
@@ -527,11 +536,11 @@ const handleGetPass = e => {
       <div className="col-md-8">
       <Accordion >
   <Card>
-    <Accordion.Toggle as={"control1"} eventKey="0" className="text-center">
-      Get VIP Pass 
+    <Accordion.Toggle as={"control1"} eventKey="0" className="text-center primaryTextColor sBox">
+      Get VIP Bus Pass 
     </Accordion.Toggle>
     <Accordion.Collapse eventKey="0">
-     <Card.Body className="vip-bg">
+     <Card.Body className="vip-bg sBox">
      
       <div className="row">
         
@@ -540,21 +549,21 @@ const handleGetPass = e => {
           <Form.Group>
         <div className="row text-center white-text">
           <div className="col-md-4">
-            <Form.Label>Select Starting Bus Stop </Form.Label>
+            <Form.Label>Starting Bus Stop </Form.Label>
             <Form.Control size="sm" as="select" name="startingStop" value={state.startingStop} onChange={handleVIPInput}>
               <option>Select...</option>
               {stopsList}
             </Form.Control> 
           </div>
           <div className="col-md-4 "> 
-          <Form.Label >Select Arrival Bus Stop </Form.Label>
+          <Form.Label >Arrival Bus Stop </Form.Label>
             <Form.Control size="sm" as="select" name="endingStop" value={state.endingStop} onChange={handleVIPInput} >
               <option>Select...</option>
               {stopsList}
           </Form.Control> 
           </div>
           <div className="col-md-4"> 
-          <Form.Label>Select Pass Type </Form.Label>
+          <Form.Label>Pass Type </Form.Label>
             <Form.Control size="sm" as="select" name="routeType" value={state.routeType} onChange={handleVIPInput}>
               <option>Select...</option>
               <option>EXPRESS</option>
@@ -589,9 +598,10 @@ const handleGetPass = e => {
       </div>
       
       <br></br>
-    <Table striped bordered  className="table-sm table-hover">
+    <div className="well well-lg">
+    <Table striped bordered  className="table-sm table-hover sBox">
       <thead>
-        <tr className="white-text">
+        <tr className="secondaryGradient white-text">
           <th>Day </th>
           <th>Departure Time</th>
           <th>Departure Stop</th>
@@ -604,8 +614,11 @@ const handleGetPass = e => {
       </tbody>
     </Table>
     </div>
+    </div>
     <div className="col-md-1"></div>
     </div>
+
+   
     </>
   );
 

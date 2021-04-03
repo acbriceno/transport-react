@@ -14,12 +14,14 @@ function Admin(props) {
 
   return (
    <>
-    <Jumbotron>
-      <h2 className="text-center">Transport Management Administrative Panel</h2>
+    <Jumbotron className="primaryBG">
+      <h2 className="text-center white-text">Transport Management Administrative Panel</h2>
         <div>
           </div>
     </Jumbotron>
-<div>
+<div className="row">
+    <div className="col-md-1"></div>
+    <div className="col-md-10">
     <Accordion >
   <Card>
     <Accordion.Toggle as={Card.Header} eventKey="0">
@@ -48,6 +50,9 @@ function Admin(props) {
   </Card>
 
   </Accordion>
+    </div>
+  <div className="col-md-1"></div>
+
 </div>
     </>
   );

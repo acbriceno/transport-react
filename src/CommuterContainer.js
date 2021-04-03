@@ -14,7 +14,9 @@ export const CommuterContainer = ({
         if (auth.getRole() === accessRole) {
           return (
             <div> 
+            <div className="">
               <NavBar {... props} />
+            </div>
               <Component {...props} />
             </div>
           );

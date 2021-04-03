@@ -20,7 +20,10 @@ import {LoginContainer} from './LoginContainer'
 import {RegisterContainer} from './RegisterContainer'
 import { onError } from "@apollo/client/link/error";
 import {ApolloLink} from "apollo-link"
-const httpLink = createHttpLink({uri: 'http://192.168.2.212:5002', credentials: 'include'}) 
+import {Footer} from './footer.js'
+
+
+const httpLink = createHttpLink({uri: 'http://ec2-3-96-167-170.ca-central-1.compute.amazonaws.com/api:2900', credentials: 'include'}) 
 
 var errorSwitch = true
 
@@ -71,6 +74,7 @@ function AppController() {
      // <ProtectedRoute exact path="/admin" component={Admin} />
         <Route path="*" component={() => "404 NOT FOUND"} />
       </Switch>
+     <Footer />
     </div>
   );
 }

@@ -58,7 +58,7 @@ export const NavBar = props => {
 
       return (
         <>
-        <p>Welcome {auth.getName()}</p>
+        <p className="white-text">Welcome {auth.getName()}</p>
     <Col>
    <Button size="sm" className="btn-space btn-info"
         onClick={redirectHome}
@@ -96,7 +96,7 @@ export const NavBar = props => {
 
   return (
     <>
-    <Row className="nav-bg">
+    <Row className="nav-bg jumbotron-fluid">
      <Col></Col>
     <Col xs={6}></Col>
     {displayHeader()}

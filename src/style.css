@@ -11,39 +11,142 @@
 }
 .header-bg{
   background-color: #87afd7;
-  padding: 5px
+  padding: 5px;
 }
 .nav-bg{
-  background-color: #3c6a97;
-  padding: 5px
+  padding: 5px;
+
 }
 .vip-bg{
  
-  background-color: #3d5061;
+  background-color: #3c6a97;
   padding: 5px
 }
 .white-text{
 color: white;
+}
+.whiteBG{
+  background-color: white;
 }
 .light-text{
   color: rgb(228, 242, 250);
   }
 
 .body-bg{
-background-color: #3d5061
+background-color: white
 
 }
 
 .header-control{
 background-size: cover;
+padding: 0%;
+
+
 background-image: url(/src/assets/header.jpg);
+
 }
 
 .table-schedule{
   padding: 10px
 }
 
-.table-hover tbody tr:hover td {
+.table-hover tbody tr:hover td { 
   background: #3c6a97;
   color: white;
+}
+
+.tableHeader{
+  background: #3c6a97;
+  color: white;
+
+}
+
+.primaryBG{
+  background: #3c6a97;
+  ;
+}
+
+.primaryGradient{
+  background-color: #000000;
+  background-image: linear-gradient(100deg, #000000 0%, #04619f 74%);
+  ;
+}
+
+.AppController {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+body {
+}
+
+.sText{
+  text-shadow: 3px 3px 5px black;
+}
+
+.sBox{
+  box-shadow: 2px 2px 5px black;
+}
+
+.homeHeaderContent{
+  padding: 5%;
+}
+
+.primaryTextColor{
+  color: #3c6a97;
+}
+
+footer{
+width: 100%;
+margin-top: auto;
+padding: 10px;
+color: white;
+background: rgb(244,211,94);
+background: linear-gradient(232deg, rgba(244,211,94,1) 0%, rgba(40,175,176,1) 0%, rgba(34,136,170,1) 100%);
+}
+
+.passes{
+  padding-left:1%;
+  padding-right: 1%;
+  padding-bottom: 1%;
+}
+.noP{
+  padding: 0;
+  margin: 0;
+}
+.someP{
+  padding: 5%;
+}
+.darkBG{
+  background: rgb(1,35,64)
+}
+
+.passImg {
+    -moz-transform: scale(2);
+    -ms-transform: scale(2);
+    -o-transform: scale(2);
+    -webkit-transform: scale(2);
+    transform: scale(2);
+}
+.activePass{
+  background-color: #28afb0;
+}
+
+
+.redeemedPass{
+  background-color: #ee964b;
+}
+
+.secondaryGradient{
+  background-color: #2288aa;
+  border: 0;
+}
+
+.tertiaryGradient{
+  background-color: #145266
+}
+
+.pineTree{
+  text-color: #1F271B;
 }

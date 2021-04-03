@@ -17,6 +17,7 @@ const pass = gql`
           value
           purchaseDate
           redeemed
+          redeemDate
           routeType
           route{
             startStopId
@@ -49,18 +50,17 @@ const initialState = {
   pass: ''
 }
 
-const serverPath = "http://192.168.2.212:5002/static/"
+const serverPath = "http://ec2-3-96-167-170.ca-central-1.compute.amazonaws.com/static/"
 function MyVerticallyCenteredModal(props) {
   return (
     <Modal
       {...props}
-      size="sm"
-      aria-labelledby="contained-modal-title-vcenter"
+    size="md"
       centered
     >
-      <Modal.Header closeButton>
+       <Modal.Header closeButton>
         <Modal.Title className="text-center">
-          Pass Code
+          Pass
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="text-center">
@@ -97,22 +97,49 @@ const Pass = ({props, passId}) => {
       console.log("no match")
       return id
   }
+const convertDate = (date)=>{
+  var tempDate = new Date(date)
 
+return tempDate.toDateString()
+}
+
+const redeemedPass = (pass) =>{
+  if(pass){
+    return(
+        <ListGroup.Item className="text-center redeemedPass">
+      <small className=" text-white">Redeemed </small>
+ <small className="text-white">{" " + convertDate(passData.pass.pass.redeemDate) }</small>
+     </ListGroup.Item >
+
+  
+    )
+  }
+  return(
+  <ListGroup.Item className="text-center activePass">
+      <small className=" text-white">Active</small>
+    </ListGroup.Item>
+
+  )
+
+}
 
   return(
     <>
 
-
-
-    <Card border="primary" style={{ width: '18rem' }}>
-    <Card.Header className="text-center"> {passData.pass.pass.routeType} </Card.Header>
-    <ListGroup variant="flush">
+    <div className="passes">
+    <Card className="sBox">
+    <Card.Header className="text-center secondaryGradient white-text"> {passData.pass.pass.routeType} </Card.Header>
+    <ListGroup >
     <ListGroup.Item>Departure: {getStopName(passData.pass.pass.route.startStopId)}</ListGroup.Item>
     <ListGroup.Item>Arrival: {getStopName(passData.pass.pass.route.endStopId)}</ListGroup.Item>
-    <ListGroup.Item><Button variant="primary" onClick={() => setModalShow(true)}>See Pass</Button></ListGroup.Item>
+    <ListGroup.Item className="text-center"><Button className="secondaryGradient" onClick={() => setModalShow(true)}>See Pass</Button></ListGroup.Item>
   </ListGroup>
+    <ListGroup.Item className="text-center">
+      <small className=" whiteBG">Purchased {" " + convertDate(passData.pass.pass.purchaseDate) }</small>
+    </ListGroup.Item>
+    {redeemedPass(passData.pass.pass.redeemed)}
     </Card>
-
+</div>
     <MyVerticallyCenteredModal
         imgPath = {passData.pass.pass.mediaPath}
         show={modalShow}
