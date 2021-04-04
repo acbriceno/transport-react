@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button'
 import Jumbotron from 'react-bootstrap/Jumbotron'
 import Toast from 'react-bootstrap/Toast'
 import {gql, useMutation} from '@apollo/client'
-
+import {NavBar} from './navbar.js'
 const  signupM = gql `
     mutation signup($user: UserInput!, $securityqa: [SecurityQAInput!]!){
       signup(user: $user, securityqa: $securityqa){
@@ -158,14 +158,15 @@ export const RegisterPage = props => {
 
   return (
     <>
-    <Jumbotron>
+    <div className="jumbotron jumbotron-fluid login-header">
+  <NavBar {...props}/>
     <div className="row">
-    <div className="col-md-4"></div>
-    <div className="col-md-4">
+    <div className="col-md-3"></div>
+    <div className="col-md-6 white-text someP">
     { errors && ( <p>{errors}</p>)
     }
 
-    <h2>Regsiter</h2>
+    <h2 classname="sText">Regsiter</h2>
 
       <form noValidate>
         <Form.Group controlId="v">
@@ -206,14 +207,14 @@ export const RegisterPage = props => {
 
           <Form.Control size="sm" type="text" placeholder="" name="sqa3" value={state.sqa3} onChange={handleInput} />  
         </Form.Group>
-        <Button size="sm" onClick={e => handleSubmit(e)}>Register</Button>
+        <Button size="sm" className="btn-success" onClick={e => handleSubmit(e)}>Register</Button>
       </form>
     <br></br>
 
      </div>
 
         </div>
-    </Jumbotron>
+    </div>
     </>
   );
 };

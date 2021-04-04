@@ -14,7 +14,6 @@ export const OperatorContainer = ({
         if (auth.getRole() === accessRole) {
           return (
             <div> 
-              <NavBar {... props} />
               <Component {...props} />
             </div>
           );

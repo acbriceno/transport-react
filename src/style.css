@@ -43,7 +43,13 @@ padding: 0%;
 
 
 background-image: url(/src/assets/header.jpg);
+}
 
+.login-header{
+background-size: cover;
+padding: 0%;
+background-image: url(/src/assets/loginHeader.jpg);
+height: 100%;
 }
 
 .table-schedule{
@@ -121,6 +127,11 @@ background: linear-gradient(232deg, rgba(244,211,94,1) 0%, rgba(40,175,176,1) 0%
 .darkBG{
   background: rgb(1,35,64)
 }
+.topP{
+  padding-top: 5%;
+}
+
+
 
 .passImg {
     -moz-transform: scale(2);

@@ -13,7 +13,6 @@ export const RegisterContainer = ({
         
           return (
             <div> 
-              <NavBar {... props} />
               <Component {...props} />
             </div>
           );

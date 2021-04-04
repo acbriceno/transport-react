@@ -536,18 +536,18 @@ const handleGetPass = e => {
       <div className="col-md-8">
       <Accordion >
   <Card>
-    <Accordion.Toggle as={"control1"} eventKey="0" className="text-center primaryTextColor sBox">
+    <Accordion.Toggle as={"control1"} eventKey="0" className="text-center primaryTextColor">
       Get VIP Bus Pass 
     </Accordion.Toggle>
     <Accordion.Collapse eventKey="0">
-     <Card.Body className="vip-bg sBox">
+     <Card.Body className="sBox">
      
       <div className="row">
         
         <div className="col-md-12">
           <form>
           <Form.Group>
-        <div className="row text-center white-text">
+        <div className="row text-center">
           <div className="col-md-4">
             <Form.Label>Starting Bus Stop </Form.Label>
             <Form.Control size="sm" as="select" name="startingStop" value={state.startingStop} onChange={handleVIPInput}>

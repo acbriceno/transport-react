@@ -4,6 +4,7 @@ import roleManager from './RoleManager'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Jumbotron from 'react-bootstrap/Jumbotron'
+import {NavBar} from './navbar.js'
 import Row from 'react-bootstrap/Row'
 import {gql, useMutation} from '@apollo/client'
 const  baseLoginM = gql `
@@ -95,6 +96,11 @@ export const LoginPage = props => {
   }
 
   const handleInput = e => {
+ console.log(e.keyCode) 
+    if(e.keyCode === 13){
+      handleSubmit(e)
+    }
+
     const inputName = e.currentTarget.name
     const value = e.currentTarget.value
     setState(prev => ({...prev, [inputName]: value}))
@@ -115,15 +121,17 @@ export const LoginPage = props => {
  
   return (
     <>
- 
    
-<div className="row center-block jumbotron-fluid ">
+    <div className="login-header jumbotron-fluid">
+    <NavBar  {...props}/>
 
- <div className="col-md-3"></div>
-<div className="col-md-6 text-center primaryBG">
-   <h1 className="text-center white-text">Belize e-Transport</h1>
+<h1 className="text-center white-text sText ">Belize e-Transport </h1> 
+
+    <div className="row homeHeaderContent"> 
+ 
+    <div className="col-md-6 white-text text-center">
       {routeGetPass}
-    <div className="">
+    <div className="white-text">
     { errors && ( <p>{errors}</p>)
     }
       <form noValidate>
@@ -132,7 +140,7 @@ export const LoginPage = props => {
           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           <Form.Control  size="sm" required type="email" placeholder="Email" name="email" value={state.email} onChange={handleInput} />
           <Form.Label className="white-text"></Form.Label>
-          <Form.Control size="sm" type="password"  placeholder="Password" name="password" value={state.password} onChange={handleInput} />
+          <Form.Control size="sm" type="password"  placeholder="Password" name="password" value={state.password} onChange={handleInput} onKeyDown={handleInput}/>
           </Form.Group>
           <Button size="sm " onClick={e => handleSubmit(e)}>Login</Button>
           <p></p>
@@ -141,9 +149,10 @@ export const LoginPage = props => {
       </form>
     </div>
     </div>
-    </div>
- <div className="col-md-3"></div>
 
+       </div>
+    </div>
+   
     </>
   );
 };

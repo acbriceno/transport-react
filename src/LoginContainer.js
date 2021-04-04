@@ -13,7 +13,6 @@ export const LoginContainer = ({
         
           return (
             <div> 
-              <NavBar {... props} />
               <Component {...props} />
             </div>
           );

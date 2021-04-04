@@ -8,42 +8,73 @@ import Button from 'react-bootstrap/Button'
 import {Tab, Row, Col, Nav} from 'react-bootstrap'
 import auth from './auth'
 import {CreateRoutePage} from './createRoute'
+import {NavBar} from './navbar.js'
 function Operator(props) {
 
   return (
    <>
-    <Jumbotron className="jumbotron-fluid primaryBG">
+    <Jumbotron className=" noP jumbotron-fluid primaryGradient">
+    <NavBar {...props}/>
       <h2 className="text-center white-text">Transport Management Operator Panel</h2>
-        <div>
+      
+    <br></br>
+    <br></br>
+    <div>
           </div>
     </Jumbotron>
 
- <Tab.Container id="left-tabs-example P" defaultActiveKey="">
+ <Tab.Container id="left-tabs-example " defaultActiveKey="head">
   <Row>
     <Col sm={3} className="someP">
       <Nav variant="pills" className="flex-column">
         <Nav.Item>
-          <Nav.Link eventKey="head">Apps</Nav.Link>
+          <Nav.Link className=" " eventKey="head">Dashboard</Nav.Link>
         </Nav.Item>
 
-        <Nav.Item className="">
-          <Nav.Link eventKey="first" aria-disabled="true">Create Route</Nav.Link>
+        <Nav.Item className="white-text">
+          <Nav.Link eventKey="first" >Create Route</Nav.Link>
         </Nav.Item>
-        <Nav.Item>
-          <Nav.Link eventKey="second">Tab 2</Nav.Link>
+   <Nav.Item>
+          <Nav.Link eventKey="routeManagement">Route Management</Nav.Link>
         </Nav.Item>
-      </Nav>
+          <Nav.Item>
+          <Nav.Link eventKey="tracking">Real Time Tracking</Nav.Link>
+        </Nav.Item>
+   <Nav.Item>
+          <Nav.Link eventKey="sales">Sale Management</Nav.Link>
+        </Nav.Item>
+     
+         <Nav.Item>
+          <Nav.Link eventKey="employeeManagement">Employee Management</Nav.Link>
+        </Nav.Item>
+ 
+         <Nav.Item>
+          <Nav.Link eventKey="accountManagement">Account Management</Nav.Link>
+        </Nav.Item>
+
+    </Nav>
     </Col>
     <Col sm={9}>
-      <Tab.Content className="someP">
+      <Tab.Content className="topP">
         <Tab.Pane eventKey="first">
-    <CreateRoutePage {...props} /> 
+   <Accordion >
+   <Card>
+    <Accordion.Toggle as={Card.Header} eventKey="2">
+      Create Operator
+    </Accordion.Toggle>
+    <Accordion.Collapse eventKey="2">
+      <Card.Body> <CreateRoutePage {...props} /> </Card.Body>
+    </Accordion.Collapse>
+  </Card>
+
+  </Accordion>
+
     </Tab.Pane>
         <Tab.Pane eventKey="second">
     <p>asd</p>
         </Tab.Pane>
-<Tab.Pane eventKey="head" disabled="true">
-    <p>asd</p>
+<Tab.Pane eventKey="head">
+    <img className="responsive" class="img-responsive"src="./operatorDashboard.png" width="100%"/>
         </Tab.Pane>
       </Tab.Content>
     </Col>

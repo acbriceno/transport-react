@@ -14,7 +14,6 @@ export const AdminContainer = ({
         if (auth.getRole() === accessRole) {
           return (
             <div> 
-              <NavBar {... props} />
               <Component {...props} />
             </div>
           );
